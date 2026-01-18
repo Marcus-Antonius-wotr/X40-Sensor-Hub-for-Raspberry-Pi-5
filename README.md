@@ -30,8 +30,10 @@ source venv/bin/activate  # Unter Windows: venv\Scripts\activate
 ```bash
 pip install gpiozero adafruit-circuitpython-ads1x15
 ```
-4. Wichtig: Stelle sicher, dass der I2C-Bus an deinem Raspberry Pi aktiviert ist (sudo raspi-config).
-
+4. Wichtig: Stelle sicher, dass der I2C-Bus an deinem Raspberry Pi aktiviert ist
+```bash
+sudo raspi-config
+```
 5.Programm starten:
 ```bash
 python Main.py
