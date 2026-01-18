@@ -1,1 +1,68 @@
+Dokumentation: Flexibles Sensor-Dashboard für das X40 Sensorkit am Raspberry Pi 5 
 
+1. Einleitung und Zielsetzung
+Das Ziel dieses Projekts war die Entwicklung einer vielseitigen Software-Lösung zur Auslesung und Visualisierung von Sensordaten aus dem X40-Sensorkit unter Verwendung eines Raspberry Pi 5. Im Gegensatz zu statischen Lösungen wurde ein Framework geschaffen, das es ermöglicht, verschiedene Sensoren dynamisch über ein grafisches User-Interface (GUI) auszuwählen und zu betreiben. "Zusätzlich wurde ein zentrales Farbschema implementiert, um spätere Anpassungen an nur einer stelle im Code zu ermöglichen." 
+Die Hauptziele wurden wie folgt definiert:
+    • Stabile Hardware-Abstraktion: Zuverlässige Auslesung unterschiedlicher Sensortypen (digital/analog) durch eine klare Trennung von Hardware-Zugriff und Datenverarbeitung.
+    • Touch-optimiertes Dashboard: Die Benutzeroberfläche wurde gezielt für die Bedienung per Touchscreen konzipiert. Dies beinhaltet große interaktive Flächen, eine intuitive Menüführung und den Verzicht auf verschachtelte Untermenüs, um die Bedienung direkt am Raspberry Pi zu optimieren.
+    • Benutzerführung durch Visualisierung: Als besonderes Zusatzfeature ("Bonus-Feature") wurde ein integrierter Anschluss-Guide implementiert. Dieser dient als schnelle Referenz und Gesamtoberblick, um die korrekte Verkabelung der Sensoren ohne externe Dokumentation zu ermöglichen.
+    • Echtzeit-Performance: Durch den Einsatz von Multithreading wird eine flüssige Visualisierung der Messwerte garantiert, ohne die Reaktionsfähigkeit der Touch-Eingaben zu beeinträchtigen.
+
+
+2. Technische Umsetzung (Software-Architektur)
+Die Software wurde in Python geschrieben und folgt einem modularen Ansatz, um Wartbarkeit und Erweiterbarkeit zu gewährleisten.
+2.1 Die Modul-Hierarchie
+Die Architektur unterteilt sich in drei wesentliche Ebenen:
+    1. Präsentationsschicht (Main_GUI.py, gui_pages.py):
+        ◦ Verantwortlich für die gesamte visuelle Darstellung mittels Tkinter.
+        ◦ Hier werden die Sensorwerte nicht berechnet, sondern nur angezeigt. Dies sorgt für eine flüssige Bedienung (GUI-Reaktivität) 
+    2. Logikschicht (sensor_calc_Profiles.py, Main.py): 
+        ◦ Main.py fungiert als "Gehirn", das die Hardware-Ebene mit der GUI verbindet. 
+        ◦ sensor_calc_Profiles.py enthält die mathematischen Formeln zur Datenaufbereitung. Jedes Sensorprofil ist hier gekapselt, was das Hinzufügen neuer Hardware aus dem X40-Kit ohne Code-Änderungen an der GUI ermöglicht.
+    3. Hardware-Abstraktionsschicht (sensors.py, input_service.py, System_Config.py): 
+        ◦ input_service.py übernimmt die direkte Kommunikation mit den GPIO-Pins des Raspberry Pi 5.
+        ◦ System_Config.py zentralisiert die Pin-Belegung und Systemeinstellungen. Das verhindert "Hard-Coding" (festgeschriebene Werte im Code), was die Fehleranfälligkeit senkt  und leichteres anpassung/erweiterung des programms.
+2.2 Objektorientierte Umsetzung und Datenfluss
+Um eine hohe Robustheit zu garantieren, wurden folgende Programmierkonzepte umgesetzt:
+    • Modularität & Funktionen: Anstatt eines langen Skripts werden Funktionen und Klassen genutzt. 
+    • Variable Benennung: Variablen wie sensor_value oder pin_configuration wurden so gewählt, dass der Code "selbsterklärend" ist, was die Wartbarkeit durch Dritte massiv erleichtert.
+    • Fehlerbehandlung (Robustheit): Durch die Struktur wird sichergestellt, dass bei einem fehlenden Sensorsignal nicht das gesamte Programm abstürzt, sondern die GUI weiterhin stabil bleibt 
+2.3 Besonderheit: Dynamisches Dashboard
+Ein Kern-Feature ist die dynamische GUI-Anpassung. Wenn in der Main_GUI ein Sensor ausgewählt wird, lädt das Programm automatisch:
+    1. Das entsprechende Umrechnungsprofil (z.B. für Temperatur oder Helligkeit).
+    2. Den passenden Anschlussplan für die Hardware-Präsentation.
+    3. Die korrekte Maßeinheit für die Anzeige im Dashboard.
+    4. Die Menüführung wurde so optimiert, dass die Auswahl der Sensoren über vordefinierte Kategorien erfolgt, um die Bedienung auf Touch Displays zu erleichtert 
+3. Hardware-Aufbau und Elektrische Umsetzung
+Die Hardware-Anbindung am Raspberry Pi 5 wurde so konzipiert, dass sie sowohl einfache digitale Signale als auch komplexe analoge Daten verarbeiten kann.
+    • Digitale Sensoren: Diese sind direkt an die GPIO-Pins des Raspberry Pi 5 angeschlossen. Im Programm wird hierfür die moderne gpiozero-Bibliothek genutzt, die eine stabile Signalerkennung gewährleistet.
+    • Analoge Sensoren via ADC (ADS1115): Da der Raspberry Pi keine nativen Analogeingänge besitzt, wurde ein ADS1115 (KY-053) als Analog-Digital-Wandler über den I2C-Bus (SDA/SCL) integriert.
+    • Dynamischer Anschlussplan: Um Fehlbeschaltungen zu vermeiden, verfügt die Software über eine integrierte Datenbank (System_Config.py). Diese generiert für jeden gewählten Sensor einen visuellen Verdrahtungsplan/Tabelle, der dem Nutzer zeigt, welcher Pin am Pi 5 oder am ADC genutzt werden muss.
+    • Elektrische Schutzmaßnahmen: Alle Sensoren werden mit der für den Pi 5 verträglichen Logikspannung von 3,3V betrieben.
+      
+
+4. Einbindung des Datenblatts (Beispiel: KY-013 / KY-018)
+Die im Programm verwendeten Berechnungsformeln in sensor_calc_Profiles.py basieren auf den technischen Spezifikationen der Sensor-Datenblätter.
+    • Beispiel Fotowiderstand (KY-018): Das Datenblatt beschreibt eine Widerstandsänderung in Abhängigkeit von der Beleuchtungsstärke. Im Code wurde dies durch eine Spannungsteiler-Formel implementiert: 
+      Helligkeit (%)=(1−Vcc​Vout​​)×100
+      Dies stellt sicher, dass die Anzeige im Dashboard nicht nur eine rohe Spannung liefert, sondern einen für den Menschen nachvollziehbaren Prozentwert.
+    • Beispiel NTC-Temperatursensor (KY-013): Hier wurde die nicht-lineare Kennlinie des Heißleiters berücksichtigt. Die Software wandelt die gemessene Spannung über den ADC unter Einbeziehung des Referenzwiderstandes in einen präzisen Celsius-Wert um.
+(Steinhart-Hart Näherung KI hat dies als die Präzesieste lösung angesehn)
+
+
+5. Projektreflexion und Problemlösung
+Die größte technische Hürde des Projekts war die Inbetriebnahme des ADS1115 ADC-Wandlers auf der neuen Raspberry Pi 5 Architektur.
+    • Problemstellung: Der Raspberry Pi 5 nutzt einen neuen I/O-Controller (RP1), wodurch viele ältere Python-Bibliotheken und Standard-Tutorials für den I2C-Bus nicht mehr funktionierten. Zudem gab es Initialisierungsfehler, da der Bus auf dem Pi 5 strikter verwaltet wird als auf dem Pi 4.
+    • Fehlersuche & Lösung:
+        1. Hardware-Ebene: Zuerst wurde mittels i2cdetect -y 1 geprüft, ob der Wandler überhaupt erkannt wird. Hierbei wurde die Standardadresse 0x48 erfolgreich lokalisiert.
+        2. Software-Ebene: Herkömmliche Treiber waren inkompatibel. Die Lösung war die Migration auf die CircuitPython-Bibliotheken von Adafruit (adafruit-circuitpython-ads1x15), die speziell für moderne Kernel angepasst wurden.
+    • Ergebnis: Durch diese Anpassungen konnte eine stabile Abtastrate von 128 Samples pro Sekunde erreicht werden, was eine flüssige Echtzeit-Anzeige der analogen Sensorwerte im Dashboard ermöglicht.
+    • Problem - GUI-Blocking: Das kontinuierliche Auslesen der Sensoren in einer Endlosschleife würde normalerweise die Benutzeroberfläche (Tkinter) "einfrieren" lassen.
+        ◦ Lösung: Implementierung von Multi-Threading. Der input_service.py läuft in einem separaten Hintergrund-Thread, während der Haupt-Thread ausschließlich für die flüssige Darstellung der GUI zuständig ist.
+    • Fazit: Das Framework ist voll funktionsfähig und durch die objektorientierte Struktur (OOP) extrem leicht um weitere Sensoren aus dem X40-Kit erweiterbar.
+
+6. Inbetriebnahme und Bedienung
+    1. Software-Vorbereitung: Starten Sie die Applikation über python Main.py. Es wird empfohlen, dies innerhalb einer virtuellen Umgebung (venv) auszuführen, um Abhängigkeiten sauber zu verwalten.
+    2. Sensor-Konfiguration: Navigieren Sie in der Sidebar zu den Slot-Einstellungen. Hier kann jeder Slot dynamisch mit einem Sensor aus der X40-Bibliothek belegt werden.
+    3. Hardware-Validierung: Nutzen Sie den integrierten Anschlussplan vor der physischen Verkabelung. Das System generiert automatisch die korrekte Pin-Belegung für den Raspberry Pi 5 oder den ADS1115 (I2C).
+    4. Echtzeit-Monitoring: Das Dashboard visualisiert die prozessierten Daten (z. B. °C, %, mT) unmittelbar. Die Aktualisierungsrate kann in der System_Config.py global angepasst werden.
