@@ -25,3 +25,16 @@ Ein modulares Framework zur dynamischen Auslesung und Visualisierung von Sensord
 ```bash
 python -m venv venv
 source venv/bin/activate  # Unter Windows: venv\Scripts\activate
+```
+3. Benötigte Bibliotheken installieren:
+```bash
+pip install gpiozero adafruit-circuitpython-ads1x15
+```
+4. Wichtig: Stelle sicher, dass der I2C-Bus an deinem Raspberry Pi aktiviert ist (sudo raspi-config).
+
+5.Programm starten:
+```bash
+python Main.py
+```
+## 📝 Lizenz
+Dieses Projekt steht unter der **MIT-Lizenz** – "Soll jeder machen, was er will!"
