@@ -2,6 +2,8 @@
 
 Ein modulares Framework zur dynamischen Auslesung und Visualisierung von Sensordaten aus dem **Joy-IT X40-Sensorkit**. Dieses Projekt wurde als Schulprojekt entwickelt und ist gezielt für die Nutzung mit einem **Touchscreen** am Raspberry Pi 5 optimiert.
 
+Note: The documentation and GUI are in German, but the source code is in English for better readability.
+
 ## ✨ Features
 * **Dynamisches Dashboard:** Sensoren können zur Laufzeit über die GUI ausgewählt und konfiguriert werden.
 * **Touch-Optimiert:** Große interaktive Flächen und intuitive Menüführung ohne verschachtelte Untermenüs.
