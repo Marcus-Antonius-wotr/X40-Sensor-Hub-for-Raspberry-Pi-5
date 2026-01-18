@@ -18,7 +18,7 @@ Ein modulares Framework zur dynamischen Auslesung und Visualisierung von Sensord
 
 | Live-Monitor | Anschluss-Guide |
 | :---: | :---: |
-| <img src="docs/Oberview.jpg" width="400"> | <img src="Anschlussplan.jpg" width="400"> |
+| <img src="docs/Oberview.jpg" width="400"> | <img src="docs/AnschlussPlan.jpg" width="400"> |
 🛠 Technische Details
 
     Sprache: Python
