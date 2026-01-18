@@ -11,7 +11,7 @@ A modular framework for dynamic reading and visualization of sensor data from th
     
 Note: The documentation and GUI are in German, but the source code is in English for better readability.
 
-German:
+### German:
 
 Ein modulares Framework zur dynamischen Auslesung und Visualisierung von Sensordaten aus dem **Joy-IT X40-Sensorkit**. Dieses Projekt wurde als Schulprojekt entwickelt und ist gezielt für die Nutzung mit einem **Touchscreen** am Raspberry Pi 5 optimiert.
 
