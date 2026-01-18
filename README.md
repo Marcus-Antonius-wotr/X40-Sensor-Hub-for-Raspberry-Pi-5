@@ -3,7 +3,7 @@ X40 Sensor-Hub für Raspberry Pi 5
 
 Ein modulares Framework zur dynamischen Auslesung und Visualisierung von Sensordaten aus dem Joy-IT X40-Sensorkit. Dieses Projekt wurde als Schulprojekt entwickelt und ist größtenteils für die Nutzung mit einem Touchscreen am Raspberry Pi 5 optimiert.
 
-![Beschreibung des Bildes](docs/overview.jpg)
+![Übersicht](docs/Oberview.jpg)
 
 ✨ Features
 
