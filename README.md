@@ -3,11 +3,11 @@ X40 Sensor Hub for Raspberry Pi 5
 A modular framework for dynamic reading and visualization of sensor data from the Joy-IT X40 sensor kit. This project was developed as a school project and is specifically optimized for use with a touchscreen on the Raspberry Pi 5.
 
 ## ✨ Features
-* **  Dynamic Dashboard:** Sensors can be selected and configured at runtime via the GUI.
-* **  Touch-Optimized:** Large interactive areas and intuitive menu navigation without deep submenus.
-* **  Integrated Connection Guide:** The software directly displays which sensor needs to be connected to which pin (GPIO or ADC).
-* **  Real-time Performance:** Thanks to multithreading (background sensor thread), the GUI remains responsive at all times.
-* **  Hardware Abstraction:** Easy integration of digital and analog sensors via the ADS1115 ADC.
+* **Dynamic Dashboard:** Sensors can be selected and configured at runtime via the GUI.
+* **Touch-Optimized:** Large interactive areas and intuitive menu navigation without deep submenus.
+* **Integrated Connection Guide:** The software directly displays which sensor needs to be connected to which pin (GPIO or ADC).
+* **Real-time Performance:** Thanks to multithreading (background sensor thread), the GUI remains responsive at all times.
+* **Hardware Abstraction:** Easy integration of digital and analog sensors via the ADS1115 ADC.
     
 Note: The documentation and GUI are in German, but the source code is in English for better readability.
 
