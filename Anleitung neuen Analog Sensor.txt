@@ -1,0 +1,51 @@
+Anleitung neuen Analog Sensor
+
+A) In System_Config.py
+
+Füge den Sensor zur SENSOR_LIBRARY hinzu, damit er im GUI-Menü erscheint:
+Python
+
+# Suche in System_Config.py nach SENSOR_LIBRARY und füge dies hinzu:
+"HW-390 Bodenfeuchte": {"mode": "ANALOG", "cat": "ANALOG"},
+
+B) In sensor_calc_Profiles.py
+
+Füge die Berechnungslogik hinzu. Ein kapazitiver Sensor wie der HW-390 liefert bei Trockenheit eine hohe Spannung (ca. 2.5V - 3.0V) und bei Nässe eine niedrige Spannung (ca. 1.1V - 1.5V).
+
+    Registriere das Profil:
+    Python
+
+    profiles = {
+        # ... existierende Sensoren ...
+        "HW-390 Bodenfeuchte": SensorCalcProfiles._moisture_hw390,
+    }
+
+Füge die Berechnungsfunktion hinzu:
+Python
+
+@staticmethod
+def _moisture_hw390(v):
+    # Werte müssen ggf. kalibriert werden:
+    # 2.6V = Trocken (0%), 1.3V = Wasser (100%)
+    dry = 2.6 
+    wet = 1.3
+
+    # Prozentrechnung (Invertiert, da niedrige Spannung = feuchter)
+    percent = (dry - v) / (dry - wet) * 100
+    percent = max(0, min(100, percent)) # Begrenzung auf 0-100%
+
+    return f"{percent:.1f} % Feuchte"
+
+3. Einrichtung in der GUI
+
+Sobald du die Dateien gespeichert hast, starte Main.py:
+
+    Gehe links auf einen freien Slot (z.B. Slot 1).
+
+    Wähle die Kategorie ANALOG.
+
+    Wähle den neuen Eintrag HW-390 Bodenfeuchte.
+
+    Wähle den Kanal (0-3), an dem das Kabel am ADS1115 steckt.
+
+    Klicke auf Speichern.
